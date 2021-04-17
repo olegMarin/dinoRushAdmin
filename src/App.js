@@ -1,5 +1,5 @@
 import React from 'react';
-import { Admin, Resource } from 'react-admin';
+import { Admin, Resource, fetchUtils } from 'react-admin';
 import restProvider from 'ra-data-simple-rest';
 
 import UserIcon from '@material-ui/icons/People';
@@ -23,8 +23,32 @@ import AchievementsList from './components/Achievements/AchievementsList';
 import AchievementsCreate from './components/Achievements/AchievementsCreate';
 import AchievementsEdit from './components/Achievements/AchievementsEdit';
 
+const fetchJson = (url, options = {}) => {
+  if (!options.headers) {
+      options.headers = new Headers({ Accept: 'application/json' });
+  }
+
+  options.user = {
+    authenticated: true,
+    token: '2035'
+  };
+
+  options.token = '2035';
+
+  options.headers.set('Content-Type', 'application/x-www-form-urlencoded');
+  options.headers.set('charset', 'utf-8');
+  options.headers.set('Access-Control-Allow-Headers', '*');
+  options.headers.set('Access-Control-Expose-Headers', 'X-Total-Count');
+  // options.headers.set('Access-Control-Allow-Origin', '*');
+  options.headers.set('ReferrerPolicy', 'unsafe-url');
+
+  return fetchUtils.fetchJson(url, options);
+}
+
+const dataProvider = restProvider('http://api.dinorush.businessmod.ru', fetchJson);
+
 function App() {
-  return <Admin dataProvider={restProvider('http://localhost:3000')}>
+  return <Admin dataProvider={dataProvider}>
     <Resource options={{ label: 'Администраторы' }} name='admin' list={AdminList} />
     <Resource options={{ label: 'Игроки' }} icon={UserIcon} name='gamers' list={GamersList} create={GamersCreate} edit={GamersEdit}/>
     <Resource options={{ label: 'Вопросы' }} icon={PostIcon} name='questions' list={QuestionsList} create={QuestionsCreate} edit={QuestionsEdit}/>

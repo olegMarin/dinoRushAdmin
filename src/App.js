@@ -1,6 +1,5 @@
 import React from 'react';
-import { Admin, Resource, fetchUtils } from 'react-admin';
-import restProvider from 'ra-data-simple-rest';
+import { Admin, Resource } from 'react-admin';
 import axios from 'axios';
 
 import UserIcon from '@material-ui/icons/People';
@@ -23,30 +22,6 @@ import AnswersEdit from './components/Answers/AnswersEdit';
 import AchievementsList from './components/Achievements/AchievementsList';
 import AchievementsCreate from './components/Achievements/AchievementsCreate';
 import AchievementsEdit from './components/Achievements/AchievementsEdit';
-/* 
-const fetchJson = (url, options = {}) => {
-  if (!options.headers) {
-      options.headers = new Headers({ Accept: 'application/json' });
-  }
-
-  options.user = {
-    authenticated: true,
-    token: '2035'
-  };
-
-  options.token = '2035';
-
-  options.headers.set('Content-Type', 'application/x-www-form-urlencoded');
-  options.headers.set('charset', 'utf-8');
-  options.headers.set('Access-Control-Allow-Headers', '*');
-  options.headers.set('Access-Control-Expose-Headers', 'X-Total-Count');
-  options.headers.set('Access-Control-Allow-Origin', '*');
-  options.headers.set('ReferrerPolicy', 'unsafe-url');
-
-  return fetchUtils.fetchJson(url, options);
-}
- */
-//const dataProvider = restProvider('http://api.dinorush.businessmod.ru/admin', fetchJson);
 
 const headers = { 
                                 'Content-Type': 'application/x-www-form-urlencoded', 
@@ -55,7 +30,7 @@ const headers = {
                                 'Access-Control-Allow-Origin': '*',
                                 'ReferrerPolicy': "unsafe-url"}
  
-const apiUrl = 'https://api.dinorush.businessmod.ru/admin/'
+const apiUrl = 'https://admin.dinorush.businessmod.ru/api/admin/'
  
 const dataProvider = {
     getList:    (resource, params) => 
@@ -87,7 +62,30 @@ const dataProvider = {
     getOne:     (resource, params) => Promise,
     getMany:    (resource, params) => Promise,
     getManyReference: (resource, params) => Promise,
-    create:     (resource, params) => Promise,
+    create:     (resource, params) => 
+                  {
+                        return new Promise(function (resolve, reject) {       
+                        axios({
+                            method: 'POST',
+                            headers: headers,
+                            url: apiUrl + resource +".php",
+                            data: {
+                                "jsonrpc": "2.0",
+                                "method": 'create',
+                                "params": { token: '2035', ...params}
+                            },
+                            responseType: 'json', 
+                            referrerPolicy: "unsafe-url", 
+                        })
+                            .then((res) => {
+                                console.log(res)
+                                resolve(res.data);
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
+                    }); 
+                  },
     update:     (resource, params) => Promise,
     updateMany: (resource, params) => Promise,
     delete:     (resource, params) => Promise,

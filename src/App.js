@@ -58,13 +58,11 @@ const dataProvider = {
                     }); 
                   }
              ,
-              
     getOne:     (resource, params) => Promise,
     getMany:    (resource, params) => Promise,
     getManyReference: (resource, params) => Promise,
     create:     (resource, params) => 
-                  {
-                        return new Promise(function (resolve, reject) {       
+                  { return new Promise(function (resolve, reject) {       
                         axios({
                             method: 'POST',
                             headers: headers,
@@ -86,9 +84,51 @@ const dataProvider = {
                             });
                     }); 
                   },
-    update:     (resource, params) => Promise,
+    update:     (resource, params) => { return new Promise(function (resolve, reject) {       
+                        axios({
+                            method: 'POST',
+                            headers: headers,
+                            url: apiUrl + resource +".php",
+                            data: {
+                                "jsonrpc": "2.0",
+                                "method": 'update',
+                                "params": { token: '2035', ...params}
+                            },
+                            responseType: 'json', 
+                            referrerPolicy: "unsafe-url", 
+                        })
+                            .then((res) => {
+                                console.log(res)
+                                resolve(res.data);
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
+                    }); 
+                  },
     updateMany: (resource, params) => Promise,
-    delete:     (resource, params) => Promise,
+    delete:     (resource, params) => { return new Promise(function (resolve, reject) {       
+                        axios({
+                            method: 'POST',
+                            headers: headers,
+                            url: apiUrl + resource +".php",
+                            data: {
+                                "jsonrpc": "2.0",
+                                "method": 'delete',
+                                "params": { token: '2035', ...params}
+                            },
+                            responseType: 'json', 
+                            referrerPolicy: "unsafe-url", 
+                        })
+                            .then((res) => {
+                                console.log(res)
+                                resolve(res.data);
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
+                    }); 
+                  },
     deleteMany: (resource, params) => Promise,
 
 }

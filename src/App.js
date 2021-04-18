@@ -2,8 +2,11 @@ import React from 'react';
 import { Admin, Resource } from 'react-admin';
 import axios from 'axios';
 
+import AdminIcon from '@material-ui/icons/Security';
 import UserIcon from '@material-ui/icons/People';
-import PostIcon from '@material-ui/icons/Book';
+import QuestionIcon from '@material-ui/icons/LiveHelp';
+import AnswerIcon from '@material-ui/icons/QuestionAnswer';
+import AchieveIcon from '@material-ui/icons/EmojiEvents';
 
 import AdminList from './components/Admin/AdminList';
 
@@ -135,7 +138,7 @@ const dataProvider = {
 
 function App() {
   return <Admin dataProvider={dataProvider}>
-    <Resource options={{ label: 'Администраторы' }} name='admin' list={AdminList} />
+    <Resource options={{ label: 'Администраторы' }} icon={AdminIcon} name='admin' list={AdminList} />
     <Resource options={{ label: 'Игроки' }} 
       icon={UserIcon} 
       name='gamers' 
@@ -144,13 +147,13 @@ function App() {
       edit={GamersEdit}/>
     <Resource 
       options={{ label: 'Вопросы' }} 
-      icon={PostIcon} 
+      icon={QuestionIcon} 
       name='questions' 
       list={QuestionsList} 
       create={QuestionsCreate} 
       edit={QuestionsEdit}/>
-    <Resource options={{ label: 'Ответы' }} icon={UserIcon} name='answers' list={AnswersList} create={AnswersCreate} edit={AnswersEdit}/>
-    <Resource options={{ label: 'Достижения' }} icon={UserIcon} name='achievements' list={AchievementsList} create={AchievementsCreate} edit={AchievementsEdit}/>
+    <Resource options={{ label: 'Ответы' }} icon={AnswerIcon} name='answers' list={AnswersList} create={AnswersCreate} edit={AnswersEdit}/>
+    <Resource options={{ label: 'Достижения' }} icon={AchieveIcon} name='achievements' list={AchievementsList} create={AchievementsCreate} edit={AchievementsEdit}/>
 
   </Admin>
 }
